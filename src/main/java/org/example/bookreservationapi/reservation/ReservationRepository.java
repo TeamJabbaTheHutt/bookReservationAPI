@@ -1,8 +1,9 @@
 package org.example.bookreservationapi.reservation;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 
-public class ReservationRepository {
-
-    List<Reservation> findByEmployeeId(Integer employeeId);
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    List<Reservation> findByEmployeeId(Long employeeId);
 }
