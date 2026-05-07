@@ -12,52 +12,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class securityTest {
-
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void loginPage_isAccessibleWithoutAuth() throws Exception {
+    void loginEndpoint_requiresAuth() throws Exception {
         mockMvc.perform(get("/login"))
-                .andExpect(status().isOk());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void validUser_canAuthenticate() throws Exception {
-        mockMvc.perform(formLogin()
+        mockMvc.perform(formLogin("/api/login")
                         .user("employee1")
                         .password("pw"))
-                .andExpect(authenticated());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void invalidUser_cannotAuthenticate() throws Exception {
-        mockMvc.perform(formLogin()
+        mockMvc.perform(formLogin("/api/login")
                         .user("employee1")
-                        .password("fwefewfewfe"))
-                .andExpect(unauthenticated());
+                        .password("wrong"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void successfulLogin_redirectsToHome() throws Exception {
-        mockMvc.perform(formLogin()
+    void successfulLogin_returns204() throws Exception {
+        mockMvc.perform(formLogin("/api/login")
                         .user("employee1")
                         .password("pw"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    void failedLogin_redirectsToLoginWithError() throws Exception {
-        mockMvc.perform(formLogin()
+    void failedLogin_returns401() throws Exception {
+        mockMvc.perform(formLogin("/api/login")
                         .user("employee1")
-                        .password("josfnofnes"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login?error"));
+                        .password("wrong"))
+                .andExpect(status().isUnauthorized());
     }
 }
