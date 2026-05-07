@@ -4,5 +4,5 @@ import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface employeeRepository extends JpaRepository<EmployeeEntity, Long> {
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
 }
