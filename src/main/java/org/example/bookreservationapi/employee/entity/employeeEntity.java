@@ -15,7 +15,7 @@ public class employeeEntity {
     private String employeeName;
     private String role;
 
-
+    public employeeEntity() {}
 
     public Long getId() {
         return id;
