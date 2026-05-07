@@ -24,7 +24,6 @@ public void setUp() {
 @Test
 void shouldFindEmployeeById() {
 
-    // Arrange
     employeeEntity employee = new employeeEntity();
 
     employee.setId(1L);
@@ -35,7 +34,7 @@ void shouldFindEmployeeById() {
             .thenReturn(Optional.of(employee));
 
 
-    employeeDTO result = employeeService.findById(1L);
+    employeeDTO result = employeeService.findById(1);
 
 
     assertNotNull(result);
