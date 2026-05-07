@@ -1,7 +1,7 @@
 package org.example.bookreservationapi;
 
 import org.example.bookreservationapi.employee.entity.employeeEntity;
-import org.example.bookreservationapi.employeeRepository.employeeRepository;
+import org.example.bookreservationapi.employee.repository.employeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
