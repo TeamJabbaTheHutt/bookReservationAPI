@@ -1,8 +1,11 @@
 package org.example.bookreservationapi.reservation;
 
+
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
@@ -10,14 +13,15 @@ import java.util.List;
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public List<Reservation> getMyReservations() {
-        Integer employeeId
+    public List<Reservation> getMyReservations(Authentication authentication) {
+        Long employeeId = Long.parseLong(authentication.getName());
+        return reservationService.getAllReservationByEmployeeId(employeeId);
     }
 }
