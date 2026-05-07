@@ -1,5 +1,7 @@
-package org.example.bookreservationapi.reservation;
+package org.example.bookreservationapi.reservation.service;
 
+import org.example.bookreservationapi.reservation.entity.Reservation;
+import org.example.bookreservationapi.reservation.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
