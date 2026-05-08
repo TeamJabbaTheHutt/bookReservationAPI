@@ -3,6 +3,7 @@ package org.example.bookreservationapi.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,28 +15,35 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Enable cookie-based CSRF protection for SPAs
-                .csrf(csrf -> csrf.spa())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").authenticated()
+                        // Public pages
+                        .requestMatchers("/", "/index.html", "/styles.css", "/app.js").permitAll()
+
+                        // Public API (optional)
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+
+
+                        .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/reservations/delete/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/reservations/edit/**").authenticated()
+
+
+                        // Everything else
                         .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
-                        .loginProcessingUrl("/api/login") // Endpoint for login requests
-                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
-                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)) // 401 on failure
+                        .permitAll() // default login page
                 )
+
                 .logout(logout -> logout
-                        .logoutUrl("/api/logout") // Endpoint for logout requests
-                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
-                )
-                // Return 401 instead of redirecting to /login
-                .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                        .permitAll()
                 );
+
         return http.build();
     }
 
@@ -43,9 +51,9 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        // TEST USERS kun én bruger - employee
         UserDetails employee = User.builder()
                 .username("employee1")
                 .password(passwordEncoder.encode("pw"))
