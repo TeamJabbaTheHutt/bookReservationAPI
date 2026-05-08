@@ -13,17 +13,29 @@ public class EmployeeEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
     private String employeeName;
     private String role;
 
-    public EmployeeEntity(Long id, String username, String employeeName, String role) {
+    public EmployeeEntity(Long id, String username, String password ,String employeeName, String role) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.employeeName = employeeName;
         this.role = role;
     }
 
     public EmployeeEntity() {
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getRole() {

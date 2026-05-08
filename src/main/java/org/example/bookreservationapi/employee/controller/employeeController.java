@@ -2,15 +2,20 @@ package org.example.bookreservationapi.employee.controller;
 
 import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.employee.service.EmployeeService;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
 @RestController
 @RequestMapping("/employees")
 public class employeeController {
 
     private final EmployeeService employeeService;
+
+    public record EmployeeResponse(String username, List<String> roles) {}
 
     public employeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -28,6 +33,15 @@ public class employeeController {
         return employeeService.findById(id);
     }
 
+
+    @GetMapping("/employee")
+    public EmployeeResponse getEmployee(Authentication authentication) {
+        String username = authentication.getName();
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        return new EmployeeResponse(username, roles);
+    }
 
     @PostMapping
     public EmployeeEntity createEmployee(
