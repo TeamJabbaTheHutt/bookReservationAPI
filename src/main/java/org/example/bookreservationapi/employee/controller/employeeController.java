@@ -1,7 +1,7 @@
 package org.example.bookreservationapi.employee.controller;
 
 import org.example.bookreservationapi.employee.entity.EmployeeEntity;
-import org.example.bookreservationapi.employee.service.employeeService;
+import org.example.bookreservationapi.employee.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 @RequestMapping("/employees")
 public class employeeController {
 
-    private final employeeService employeeService;
+    private final EmployeeService employeeService;
 
-    public employeeController(employeeService employeeService) {
+    public employeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
