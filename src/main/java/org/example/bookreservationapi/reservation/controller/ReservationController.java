@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
-
+// test
 @RestController
-@RequestMapping("/api/reservations")
+@RequestMapping("api/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
