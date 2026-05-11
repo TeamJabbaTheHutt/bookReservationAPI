@@ -22,11 +22,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.spa())
                 .authorizeHttpRequests(auth -> auth
-                        // Public pages
                         .requestMatchers("/", "/index.html", "/styles.css", "/app.js").permitAll()
 
-                        // Public API (optional)
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
 
 
@@ -35,16 +34,28 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/reservations/edit/**").authenticated()
 
 
-                        // Everything else
                         .anyRequest().authenticated()
                 )
 
+//                .formLogin(form -> form
+//                        .permitAll()
+//                )
+//
+//                .logout(logout -> logout
+//                        .permitAll()
+//                );
                 .formLogin(form -> form
-                        .permitAll() // default login page
+                        .loginProcessingUrl("/api/login") // Endpoint for login requests
+                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
+                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)) // 401 on failure
                 )
-
                 .logout(logout -> logout
-                        .permitAll()
+                        .logoutUrl("/api/logout") // Endpoint for logout requests
+                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
+                )
+                // Return 401 instead of redirecting to /login
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 );
 
         return http.build();
@@ -65,7 +76,7 @@ public class SecurityConfig {
 
             return User.builder()
                     .username(employee.getUsername())
-                    .password(employee.getPassword()) // must already be encoded
+                    .password(employee.getPassword())
                     .roles("USER")
                     .build();
         };

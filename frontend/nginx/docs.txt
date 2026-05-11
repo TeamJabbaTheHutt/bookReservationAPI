@@ -1,0 +1,5 @@
+upstream backend {
+    server host.docker.internal:8080; // for alt andet end linux
+    server 172.17.0.1:8080; // for linux
+    keepalive 32;
+}
