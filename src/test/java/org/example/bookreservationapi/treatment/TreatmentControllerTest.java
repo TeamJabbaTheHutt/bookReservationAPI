@@ -82,9 +82,15 @@ class TreatmentControllerTest {
     @Test
     void createAndDeleteTreatment() {
 
+        Treatment treatmentTest = new Treatment();
+        treatmentTest.setTitle("treatmentTest");
+        treatmentTest.setPrice(200);
+        treatmentTest.setDurationMinutes(2001);
+
         ResponseEntity<Treatment> response =
                 treatmentController.createTreatment(
-                        new Treatment("treatmentTest", 200, 2001)
+                        treatmentTest
+
                 );
 
         Treatment treatment = response.getBody();
