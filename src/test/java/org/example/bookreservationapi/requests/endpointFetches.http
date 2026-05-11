@@ -1,0 +1,84 @@
+###
+
+GET http://localhost:8080/employees
+
+###
+
+GET http://localhost:8080/employees/1
+
+###
+
+GET http://localhost:8080/employees/employee
+Authorization: Basic username password
+
+###
+
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "username": "john",
+  "password": "pw123",
+  "employeeName": "John Doe",
+  "role": "USER"
+}
+
+###
+
+DELETE http://localhost:8080/employees/1
+
+###
+
+GET http://localhost:8080/api/reservations/all
+Authorization: Basic username password
+
+###
+
+GET http://localhost:8080/api/reservations?startDate=2026-01-01&endDate=2026-01-31
+Authorization: Basic username password
+
+###
+
+GET http://localhost:8080/api/reservations/all-reservations
+
+###
+
+GET http://localhost:8080/api/reservations/employee/1
+
+###
+
+GET http://localhost:8080/api/treatment
+
+###
+
+GET http://localhost:8080/api/treatment/1
+
+###
+
+POST http://localhost:8080/api/treatment
+Content-Type: application/json
+
+{
+  "title": "Nails",
+  "durationMinutes": 60,
+  "price": 200
+}
+
+###
+
+PUT http://localhost:8080/api/treatment/1
+Content-Type: application/json
+
+{
+  "title": "Updated Nails",
+  "durationMinutes": 90,
+  "price": 250
+}
+
+###
+
+DELETE http://localhost:8080/api/treatment
+
+###
+
+DELETE http://localhost:8080/api/treatment/1
