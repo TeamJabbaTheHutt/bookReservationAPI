@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
-// test
+
 @RestController
 @RequestMapping("api/reservations")
 public class ReservationController {
@@ -45,4 +45,11 @@ public class ReservationController {
 
         return reservationService.getReservationsForEmployee(employee.getId(), startDate, endDate);
     }
+
+    @GetMapping("/all-reservations")
+    public List<Reservation> getAllReservationsEvenIfEmpty() {
+        return reservationService.findAllReservationsEvenIfEmpty();
+    }
+
+
 }

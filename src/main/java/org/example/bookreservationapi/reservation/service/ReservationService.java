@@ -40,4 +40,11 @@ public class ReservationService {
     public Optional<EmployeeEntity> findByUsername(String username) {
         return employeeService.findByUsername(username);
     }
+
+    public List<Reservation> findAllReservationsEvenIfEmpty() {
+        return reservationRepository.findAll();
+    }
+
+
 }
+
