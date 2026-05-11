@@ -1,7 +1,9 @@
 package org.example.bookreservationapi.reservation.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.example.bookreservationapi.treament.entity.Treatment;
 
 import java.time.LocalDateTime;
 
@@ -13,17 +15,22 @@ public class Reservation {
 
     @Column(name = "employee_id")
     private Long employeeId;
-    private Long treatmentId;
+
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "treatment_id")
+    private Treatment treatment;
 
     private LocalDateTime startDateTime;
 
     private String customerName;
     private String customerEmail;
 
-    public Reservation(Long reservationId, Long employeeId, Long treatmentId, LocalDateTime startDateTime, String customerName, String customerEmail) {
+    public Reservation(Long reservationId, Long employeeId, LocalDateTime startDateTime, String customerName, String customerEmail) {
         this.reservationId = reservationId;
         this.employeeId = employeeId;
-        this.treatmentId = treatmentId;
+
         this.startDateTime = startDateTime;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -48,13 +55,6 @@ public class Reservation {
         this.employeeId = employeeId;
     }
 
-    public Long getTreatmentId() {
-        return treatmentId;
-    }
-
-    public void setTreatmentId(Long treatmentId) {
-        this.treatmentId = treatmentId;
-    }
 
     public LocalDateTime getStartDateTime() {
         return startDateTime;

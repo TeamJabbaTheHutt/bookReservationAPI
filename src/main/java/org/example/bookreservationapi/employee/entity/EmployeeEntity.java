@@ -1,6 +1,10 @@
 package org.example.bookreservationapi.employee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.example.bookreservationapi.treament.entity.Treatment;
+
+import java.util.List;
 
 @Entity
 @Table(name = "employee")
@@ -15,6 +19,10 @@ public class EmployeeEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "employees")
+    private List<Treatment> treatments;
 
     private String employeeName;
     private String role;
