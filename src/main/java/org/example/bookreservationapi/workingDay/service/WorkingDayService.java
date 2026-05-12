@@ -20,6 +20,10 @@ public class WorkingDayService {
         this.employeeService = employeeService;
     }
 
+    public List<WorkingDay> getAllWorkingDays() {
+        return workingDayRepository.findAll();
+    }
+
     public List<WorkingDay> getMyWorkingDays(Authentication authentication) {
         EmployeeEntity employee = getCurrentEmployee(authentication);
         return workingDayRepository.findByEmployee(employee);

@@ -1,4 +1,5 @@
-// import {fetchEntityList} from "./fetch.js";
+
+import {fetchEntityList} from "./fetch.js";
 
 export function initCalender() {
 
@@ -6,45 +7,45 @@ export function initCalender() {
     renderCalender(calender);
 }
 // frontend dummy data lige nu skal komme fra initAPP
-const entityDaySpan = [
-    {
-        entityName: "Mette",
-        startDateTime: "2026-05-11T09:00:00",
-        endDateTime: "2026-05-11T17:00:00"
-    },
-    {
-        entityName: "Laura",
-        startDateTime: "2026-05-11T09:00:00",
-        endDateTime: "2026-05-11T11:00:00"
-    },
-    {
-        entityName: "Niklas",
-        startDateTime: "2026-05-12T10:00:00",
-        endDateTime: "2026-05-12T18:00:00"
-    },
-    {
-        entityName: "Laura",
-        startDateTime: "2026-05-13T08:00:00",
-        endDateTime: "2026-05-13T16:00:00"
-    },
-    {
-        entityName: "Mette",
-        startDateTime: "2026-05-14T12:00:00",
-        endDateTime: "2026-05-14T20:00:00"
-    },
-    {
-        entityName: "Niklas",
-        startDateTime: "2026-05-15T09:00:00",
-        endDateTime: "2026-05-15T17:00:00"
-    }
-];
+// const entityDaySpan = [
+//     {
+//         entityName: "Mette",
+//         startDateTime: "2026-05-11T09:00:00",
+//         endDateTime: "2026-05-11T17:00:00"
+//     },
+//     {
+//         entityName: "Laura",
+//         startDateTime: "2026-05-11T09:00:00",
+//         endDateTime: "2026-05-11T11:00:00"
+//     },
+//     {
+//         entityName: "Niklas",
+//         startDateTime: "2026-05-12T10:00:00",
+//         endDateTime: "2026-05-12T18:00:00"
+//     },
+//     {
+//         entityName: "Laura",
+//         startDateTime: "2026-05-13T08:00:00",
+//         endDateTime: "2026-05-13T16:00:00"
+//     },
+//     {
+//         entityName: "Mette",
+//         startDateTime: "2026-05-14T12:00:00",
+//         endDateTime: "2026-05-14T20:00:00"
+//     },
+//     {
+//         entityName: "Niklas",
+//         startDateTime: "2026-05-15T09:00:00",
+//         endDateTime: "2026-05-15T17:00:00"
+//     }
+// ];
 
 let currentWeekOffset = 0;
 
 export function renderCalender(calendar) {
 
     // lige nu er det kun på working days, ud fra en knap skal kan vi render specificerede lister
-    // let entityDaySpan = fetchEntityList("workingDays");
+    let entityDaySpan = fetchEntityList("workingDays");
     const today = new Date();
 
     const currentDay = today.getDay();

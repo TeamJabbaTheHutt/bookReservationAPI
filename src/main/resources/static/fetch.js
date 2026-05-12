@@ -5,7 +5,7 @@ export const BASE_URL = "/api";
 export async function fetchEntityList(entity) {
     let res = "";
     if (entity === "workingDays") {
-        res = await fetch(`${BASE_URL}/workingDays`);
+        res = await fetch(`${BASE_URL}/workingDays`, {});
         return await res.json();
     } else {
         return null;
