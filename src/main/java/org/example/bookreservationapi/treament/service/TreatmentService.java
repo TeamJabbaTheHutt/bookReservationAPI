@@ -2,6 +2,7 @@ package org.example.bookreservationapi.treament.service;
 
 
 import org.example.bookreservationapi.treament.entity.Treatment;
+import org.example.bookreservationapi.treament.entity.TreatmentDTO;
 import org.example.bookreservationapi.treament.repository.TreatmentRepository;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,13 @@ public class TreatmentService {
         } else {
             return false;
         }
+    }
+
+    public List<TreatmentDTO> findByEmployeeId(Long employeeId) {
+        return treatmentRepository.findByEmployees_Id(employeeId)
+                .stream()
+                .map(t -> new TreatmentDTO(t.getTreatmentId(), t.getTitle(), t.getDurationMinutes()))
+                .toList();
     }
 
 
