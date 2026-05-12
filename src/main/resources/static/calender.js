@@ -1,5 +1,7 @@
 // import {fetchEntityList} from "./fetch.js";
 
+import {fetchEntityList} from "./fetch.js";
+
 export function initCalender() {
 
     const calender = document.getElementById("calender");
@@ -41,10 +43,10 @@ const entityDaySpan = [
 
 let currentWeekOffset = 0;
 
-export function renderCalender(calendar) {
+export async function renderCalender(calendar) {
 
     // lige nu er det kun på working days, ud fra en knap skal kan vi render specificerede lister
-    // let entityDaySpan = fetchEntityList("workingDays");
+    let entityDaySpan = await fetchEntityList("workingDays");
     const today = new Date();
 
     const currentDay = today.getDay();
@@ -153,7 +155,7 @@ export function renderCalender(calendar) {
             let width = 100 / employeesWorking.length;
             let left = j * width;
 
-            let name = employee.entityName;
+            let name = employee.employee.employeeName;
 
             let startText = employee.startDateTime.split("T")[1].substring(0, 5);
             let endText = employee.endDateTime.split("T")[1].substring(0, 5);
