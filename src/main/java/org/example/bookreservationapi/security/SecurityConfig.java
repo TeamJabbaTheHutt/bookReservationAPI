@@ -8,14 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-// test
+
 @Configuration
 public class SecurityConfig {
 
@@ -24,36 +22,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.spa())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/styles.css", "/app.js").permitAll()
+                        // Statiske frontend-filer
+                        .requestMatchers("/", "/*.html", "/*.css", "/*.js").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-
-
+                        // Offentlige API-endpoints (booking-flow uden login)
+                        .requestMatchers(HttpMethod.GET, "/api/employees", "/api/employees/*/treatments").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/reservations/delete/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/reservations/edit/**").authenticated()
 
-
+                        // Resten kræver login
                         .anyRequest().authenticated()
                 )
-
-//                .formLogin(form -> form
-//                        .permitAll()
-//                )
-//
-//                .logout(logout -> logout
-//                        .permitAll()
-//                );
                 .formLogin(form -> form
-                        .loginProcessingUrl("/api/login") // Endpoint for login requests
-                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
-                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED)) // 401 on failure
+                        .loginProcessingUrl("/api/login")
+                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
+                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/api/logout") // Endpoint for logout requests
-                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204 on success
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
                 )
-                // Return 401 instead of redirecting to /login
                 .exceptionHandling(eh -> eh
                         .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 );
@@ -68,9 +55,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(EmployeeService employeeService) {
-
         return username -> {
-
             EmployeeEntity employee = employeeService.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
