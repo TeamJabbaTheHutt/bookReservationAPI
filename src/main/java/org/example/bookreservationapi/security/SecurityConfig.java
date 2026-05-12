@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+//
 
 @Configuration
 public class SecurityConfig {
@@ -20,29 +21,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.spa())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Statiske frontend-filer
-                        .requestMatchers("/", "/*.html", "/*.css", "/*.js").permitAll()
-
-                        // Offentlige API-endpoints (booking-flow uden login)
-                        .requestMatchers(HttpMethod.GET, "/api/employees", "/api/employees/*/treatments").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
-
-                        // Resten kræver login
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/login")
-                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
-                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/logout")
-                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
-                )
-                .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
@@ -52,18 +33,57 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public UserDetailsService userDetailsService(EmployeeService employeeService) {
-        return username -> {
-            EmployeeEntity employee = employeeService.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-            return User.builder()
-                    .username(employee.getUsername())
-                    .password(employee.getPassword())
-                    .roles("USER")
-                    .build();
-        };
-    }
 }
+//@Configuration
+//public class SecurityConfig {
+//
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.spa())
+//                .authorizeHttpRequests(auth -> auth
+//                        // Statiske frontend-filer
+//                        .requestMatchers("/", "/*.html", "/*.css", "/*.js").permitAll()
+//
+//                        // Offentlige API-endpoints (booking-flow uden login)
+//                        .requestMatchers(HttpMethod.GET, "/api/employees", "/api/employees/*/treatments").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/reservations").permitAll()
+//
+//                        // Resten kræver login
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin(form -> form
+//                        .loginProcessingUrl("/api/login")
+//                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
+//                        .failureHandler((req, res, ex) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+//                )
+//                .logout(logout -> logout
+//                        .logoutUrl("/api/logout")
+//                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT))
+//                )
+//                .exceptionHandling(eh -> eh
+//                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+//                );
+//
+//        return http.build();
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public UserDetailsService userDetailsService(EmployeeService employeeService) {
+//        return username -> {
+//            EmployeeEntity employee = employeeService.findByUsername(username)
+//                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//            return User.builder()
+//                    .username(employee.getUsername())
+//                    .password(employee.getPassword())
+//                    .roles("USER")
+//                    .build();
+//        };
+//    }
+//}

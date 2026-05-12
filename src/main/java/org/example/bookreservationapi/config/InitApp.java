@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class InitApp {
 
     @Bean
+    @Transactional
     CommandLineRunner initDatabase(
             TreatmentRepository treatmentRepository,
             EmployeeRepository employeeRepository,

@@ -18,10 +18,16 @@ public class WorkingDayController {
         this.workingDayService = workingDayService;
     }
 
-    @GetMapping
+    @GetMapping("/employee")
     public List<WorkingDay> getMyWorkingDays(Authentication authentication) {
         return workingDayService.getMyWorkingDays(authentication);
     }
+
+    @GetMapping()
+    public List<WorkingDay> getAllWorkingDays() {
+        return workingDayService.getAllWorkingDays();
+    }
+
 
     @PostMapping
     public WorkingDay createWorkingDay(@RequestBody WorkingDay workingDay, Authentication authentication){
