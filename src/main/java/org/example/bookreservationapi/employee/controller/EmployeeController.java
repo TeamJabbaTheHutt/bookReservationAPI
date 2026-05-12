@@ -2,6 +2,7 @@ package org.example.bookreservationapi.employee.controller;
 
 import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.employee.service.EmployeeService;
+import org.example.bookreservationapi.treament.entity.TreatmentDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +12,13 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 @RestController
 @RequestMapping("/employees")
-public class employeeController {
+public class EmployeeController {
 
     private final EmployeeService employeeService;
 
     public record EmployeeResponse(String username, List<String> roles) {}
 
-    public employeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
@@ -50,9 +51,13 @@ public class employeeController {
         return employeeService.saveEmployee(employee);
     }
 
-
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+    }
+
+    @GetMapping("/{id}/treatments")
+    public List<TreatmentDTO> getTreatmentsForEmployee(@PathVariable Long id) {
+        return employeeService.getTreatmentsForEmployee(id);
     }
 }
