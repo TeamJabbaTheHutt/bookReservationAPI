@@ -1,5 +1,5 @@
 ###
-
+### employees
 GET http://localhost:8080/employees
 
 ###
@@ -29,6 +29,12 @@ DELETE http://localhost:8080/employees/1
 
 ###
 
+
+GET http://localhost:8080/api/reservations/employee/1
+
+###
+### reservations
+
 GET http://localhost:8080/api/reservations/all
 Authorization: Basic username password
 
@@ -41,11 +47,8 @@ Authorization: Basic username password
 
 GET http://localhost:8080/api/reservations/all-reservations
 
-###
 
-GET http://localhost:8080/api/reservations/employee/1
-
-###
+### treatments
 
 GET http://localhost:8080/api/treatment
 
@@ -63,6 +66,8 @@ Content-Type: application/json
   "durationMinutes": 60,
   "price": 200
 }
+
+
 
 ###
 
@@ -82,3 +87,45 @@ DELETE http://localhost:8080/api/treatment
 ###
 
 DELETE http://localhost:8080/api/treatment/1
+
+###
+### Working day
+
+GET http://localhost:8080/api/workingDay
+
+###
+
+
+
+GET http://localhost:8080/api/workingDay/1
+
+###
+
+POST http://localhost:8080/api/workingDay
+Content-Type: application/json
+
+{
+  "startDateTime": "2026-05-11T09:00:00",
+  "endDateTime": "2026-05-11T17:00:00",
+  "employeeId": 1
+}
+
+###
+
+### Update working day by id
+PUT http://localhost:8080/api/workingDay/1
+Content-Type: application/json
+
+{
+  "startDateTime": "2026-05-11T10:00:00",
+  "endDateTime": "2026-05-11T18:00:00",
+  "employeeId": 1
+}
+
+###
+
+DELETE http://localhost:8080/api/workingDay
+
+###
+
+DELETE http://localhost:8080/api/workingDay/1
