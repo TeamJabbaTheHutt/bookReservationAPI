@@ -1,4 +1,5 @@
-const BASE_URL = "";
+import {initCalender} from "./calender.js";
+
 
 
 document.addEventListener("DOMContentLoaded", initApp);
@@ -9,7 +10,7 @@ async function initApp() {
 
 
     loginBtn.addEventListener("click", () => redirectLogin());
-
+    initCalender();
 
 }
 
