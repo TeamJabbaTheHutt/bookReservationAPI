@@ -17,6 +17,20 @@ export async function fetchEntityList(entity) {
 }
 
 
+// @GetMapping("/employee")
+// public List<WorkingDay> getMyWorkingDays(Authentication authentication) {
+//     return workingDayService.getMyWorkingDays(authentication);
+// }
+
+export async function fetchEntityListByEmployee(employeeId) {
+    const res = await fetch(`${BASE_URL}/workingdays/` + employeeId, {
+        headers: {
+            "Accept": "application/json"
+        }
+    });
+    return await res.json();
+}
+
 //treatment
 export async function fetchTreatments() {
     const res = await fetch(`${BASE_URL}/treatment`);
