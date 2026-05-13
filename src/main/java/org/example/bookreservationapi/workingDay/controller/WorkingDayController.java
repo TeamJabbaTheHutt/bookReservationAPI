@@ -23,6 +23,14 @@ public class WorkingDayController {
         return workingDayService.getMyWorkingDays(authentication);
     }
 
+    @GetMapping("/{employeeId}")
+    public List<WorkingDay> getWorkingdaysByEmployeeId(
+            @PathVariable("employeeId") Long employeeId
+    ) {
+        System.out.println("hit");
+        return workingDayService.getWorkingDaysByEmployeeId(employeeId);
+    }
+
     @GetMapping()
     public List<WorkingDay> getAllWorkingDays() {
         return workingDayService.getAllWorkingDays();

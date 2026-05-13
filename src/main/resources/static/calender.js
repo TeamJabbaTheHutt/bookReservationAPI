@@ -1,52 +1,72 @@
-// import {fetchEntityList} from "./fetch.js";
-
-import {fetchEntityList} from "./fetch.js";
-
-export function initCalender() {
-
-    const calender = document.getElementById("calender");
-    renderCalender(calender);
-}
-// frontend dummy data lige nu skal komme fra initAPP
-const entityDaySpan = [
-    {
-        entityName: "Mette",
-        startDateTime: "2026-05-11T09:00:00",
-        endDateTime: "2026-05-11T17:00:00"
-    },
-    {
-        entityName: "Laura",
-        startDateTime: "2026-05-11T09:00:00",
-        endDateTime: "2026-05-11T11:00:00"
-    },
-    {
-        entityName: "Niklas",
-        startDateTime: "2026-05-12T10:00:00",
-        endDateTime: "2026-05-12T18:00:00"
-    },
-    {
-        entityName: "Laura",
-        startDateTime: "2026-05-13T08:00:00",
-        endDateTime: "2026-05-13T16:00:00"
-    },
-    {
-        entityName: "Mette",
-        startDateTime: "2026-05-14T12:00:00",
-        endDateTime: "2026-05-14T20:00:00"
-    },
-    {
-        entityName: "Niklas",
-        startDateTime: "2026-05-15T09:00:00",
-        endDateTime: "2026-05-15T17:00:00"
-    }
-];
+import {
+    fetchAllEmployees,
+    fetchEntityList,
+    fetchEntityListByEmployee
+} from "./fetch.js";
 
 let currentWeekOffset = 0;
 
+let selectedEmployeeId = null;
+
+export function initCalender() {
+    const calender = document.getElementById("calender");
+
+    renderCalender(calender);
+    renderSelector();
+}
+
+export async function renderSelector() {
+    const employees = await fetchAllEmployees();
+
+    const selector = document.getElementById("selector");
+
+    selector.innerHTML = "";
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "All employees";
+    selector.appendChild(defaultOption);
+
+    employees.forEach((employee) => {
+        const option = document.createElement("option");
+
+        option.value = employee.id;
+        option.textContent = employee.employeeName;
+
+        selector.appendChild(option);
+    });
+
+    selector.addEventListener("change", async (event) => {
+
+        selectedEmployeeId = event.target.value || null;
+
+        console.log("Selected employee:", selectedEmployeeId);
+
+        const calender = document.getElementById("calender");
+
+        await renderCalender(calender);
+    });
+}
+
+export async function fetchEntitySpanOnEmployeeId(employeeId) {
+
+    if (!employeeId) {
+        return await fetchEntityList("workingDays");
+    }
+
+    return await fetchEntityListByEmployee(employeeId);
+}
+
 export async function renderCalender(calendar) {
 
-    // lige nu er det kun på working days, ud fra en knap skal kan vi render specificerede lister
-    let entityDaySpan = await fetchEntityList("workingDays");
+    let entityDaySpan;
+
+    if (selectedEmployeeId === null) {
+        entityDaySpan = await fetchEntityList("workingDays");
+    } else {
+        entityDaySpan = await fetchEntitySpanOnEmployeeId(selectedEmployeeId);
+    }
+
     const today = new Date();
 
     const currentDay = today.getDay();
@@ -157,8 +177,13 @@ export async function renderCalender(calendar) {
 
             let name = employee.employee.employeeName;
 
-            let startText = employee.startDateTime.split("T")[1].substring(0, 5);
-            let endText = employee.endDateTime.split("T")[1].substring(0, 5);
+            let startText = employee.startDateTime
+                .split("T")[1]
+                .substring(0, 5);
+
+            let endText = employee.endDateTime
+                .split("T")[1]
+                .substring(0, 5);
 
             employeeHtml +=
                 "<div class='calendar-event' style='" +

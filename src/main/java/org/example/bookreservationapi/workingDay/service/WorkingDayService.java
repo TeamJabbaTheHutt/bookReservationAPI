@@ -24,6 +24,11 @@ public class WorkingDayService {
         return workingDayRepository.findAll();
     }
 
+    public List<WorkingDay> getWorkingDaysByEmployeeId(Long id) {
+        EmployeeEntity employee = employeeService.findById(id);
+        return workingDayRepository.findByEmployee(employee);
+    }
+
     public List<WorkingDay> getMyWorkingDays(Authentication authentication) {
         EmployeeEntity employee = getCurrentEmployee(authentication);
         return workingDayRepository.findByEmployee(employee);

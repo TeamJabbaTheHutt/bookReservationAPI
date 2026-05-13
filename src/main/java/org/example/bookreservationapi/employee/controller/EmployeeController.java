@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
