@@ -1,3 +1,5 @@
+import {initCalender} from "./calender.js";
+
 document.addEventListener("DOMContentLoaded", initApp);
 
 const BASE_URL = "";
@@ -12,7 +14,7 @@ const UI = {
 
 async function initApp() {
     setupUi();
-
+    initCalender();
     try {
         const user = await getCurrentUser();
 
