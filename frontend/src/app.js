@@ -1,70 +1,149 @@
 document.addEventListener("DOMContentLoaded", initApp);
 
-const BASE_URL = ""; // nginx proxies requests, so relative URLs are enough
+const BASE_URL = "";
 
-const UI_ELEMENTS = {
+const UI = {
     loginForm: null,
     messageDiv: null,
     userInfo: null
 };
 
+/* ---------------- INIT ---------------- */
 
-function initApp() {
+async function initApp() {
     setupUi();
-    showLoginForm();
+
+    try {
+        const user = await getCurrentUser();
+
+        hideLoginForm();
+        showUserInfo(user);
+        setMessage("Logged in", true);
+    } catch {
+        showLoginForm();
+        hideUserInfo();
+        setMessage("", true);
+    }
 }
 
-function setupUi() {
-    UI_ELEMENTS.loginForm = document.getElementById("login-form");
-    UI_ELEMENTS.messageDiv = document.getElementById("message");
-    UI_ELEMENTS.userInfo = document.getElementById("user-info");
+/* ---------------- USER ---------------- */
 
-    UI_ELEMENTS.loginForm.addEventListener("submit", handleLogin);
+async function getCurrentUser() {
+    const response = await fetch(`${BASE_URL}/api/employees/employee`, {
+        credentials: "include"
+    });
+
+    if (response.status === 401) {
+        throw new Error("Not logged in");
+    }
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch user");
+    }
+
+    return await response.json();
 }
 
-function hideLoginForm() {
-    UI_ELEMENTS.loginForm.classList.add("hidden");
-}
-
-function showLoginForm() {
-    UI_ELEMENTS.loginForm.classList.remove("hidden");
-}
+/* ---------------- LOGIN ---------------- */
 
 async function handleLogin(event) {
     event.preventDefault();
 
-    const form = event.target;
-    const formData = new FormData(form);
+    const formData = new FormData(event.target);
     const username = formData.get("username");
     const password = formData.get("password");
 
-    try {
-        const response = await fetch(`${BASE_URL}/api/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ username, password })
-        });
+    const response = await fetch(`${BASE_URL}/api/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-XSRF-TOKEN": getCsrfToken()
+        },
+        body: new URLSearchParams({ username, password })
+    });
 
-        if (!response.ok) {
-            throw new Error("Login failed. Please check your credentials.");
-        }
-
-        form.reset();
-        setDisplayMessage("Login successful!", true);
-        // PLACEHOLDER #1: After successful login
-
-    } catch (error) {
-        setDisplayMessage(error.message, false);
+    if (!response.ok) {
+        setMessage("Login failed", false);
+        return;
     }
+
+    const user = await getCurrentUser();
+
+    hideLoginForm();
+    showUserInfo(user);
+    setMessage("Login successful", true);
 }
 
-function setDisplayMessage(text, isSuccess) {
-    UI_ELEMENTS.messageDiv.textContent = text;
-    UI_ELEMENTS.messageDiv.style.color = isSuccess ? "green" : "red";
+/* ---------------- LOGOUT ---------------- */
+
+async function handleLogout() {
+    const response = await fetch(`${BASE_URL}/api/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "X-XSRF-TOKEN": getCsrfToken()
+        }
+    });
+
+    if (!response.ok) {
+        setMessage("Logout failed", false);
+        return;
+    }
+
+    hideUserInfo();
+    showLoginForm();
+    setMessage("Logged out", true);
 }
 
-function clearDisplayMessage() {
-    UI_ELEMENTS.messageDiv.textContent = "";
+/* ---------------- UI ---------------- */
+
+function setupUi() {
+    UI.loginForm = document.getElementById("login-form");
+    UI.messageDiv = document.getElementById("message");
+    UI.userInfo = document.getElementById("user-info");
+
+    UI.loginForm.addEventListener("submit", handleLogin);
+}
+
+function showUserInfo(user) {
+    UI.userInfo.innerHTML = `
+        <div>
+            <span>${user.username}</span>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    `;
+
+    document
+        .getElementById("logoutBtn")
+        .addEventListener("click", handleLogout);
+
+    UI.userInfo.classList.remove("hidden");
+}
+
+function hideUserInfo() {
+    UI.userInfo.innerHTML = "";
+    UI.userInfo.classList.add("hidden");
+}
+
+function showLoginForm() {
+    UI.loginForm.classList.remove("hidden");
+}
+
+function hideLoginForm() {
+    UI.loginForm.classList.add("hidden");
+}
+
+/* ---------------- MESSAGE ---------------- */
+
+function setMessage(text, success) {
+    UI.messageDiv.textContent = text;
+    UI.messageDiv.style.color = success ? "green" : "red";
+}
+
+/* ---------------- CSRF ---------------- */
+
+function getCsrfToken() {
+    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : "";
 }
