@@ -35,15 +35,17 @@ public class Reservation {
         this.customerEmail = customerEmail;
     }
 
+
+
+    public Reservation() {
+    }
+
     public Treatment getTreatment() {
         return treatment;
     }
 
     public void setTreatment(Treatment treatment) {
         this.treatment = treatment;
-    }
-
-    public Reservation() {
     }
 
     public Long getReservationId() {
@@ -87,11 +89,5 @@ public class Reservation {
         this.customerEmail = customerEmail;
     }
 
-    public Treatment getTreatment() {
-        return treatment;
-    }
 
-    public void setTreatment(Treatment treatment) {
-        this.treatment = treatment;
-    }
 }
