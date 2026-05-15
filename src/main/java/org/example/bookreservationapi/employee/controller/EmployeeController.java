@@ -60,4 +60,9 @@ public class EmployeeController {
     public List<TreatmentDTO> getTreatmentsForEmployee(@PathVariable Long id) {
         return employeeService.getTreatmentsForEmployee(id);
     }
+
+    private record employeeResponse(Long id, String username, List<String> roles) {}
+
+    private record employeeRequest(String username, List<String> roles, String password) {}
+
 }
