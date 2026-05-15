@@ -63,7 +63,7 @@ class TreatmentControllerTest {
 
         List<Treatment> treatments = response.getBody();
 
-        assertThat(treatments).hasSize(2);
+        assertThat(treatments).hasSize(4);
         assertThat(treatments.get(0).getTitle()).isEqualTo("treatment1");
         assertThat(treatments.get(1).getTitle()).isEqualTo("treatment2");
     }
