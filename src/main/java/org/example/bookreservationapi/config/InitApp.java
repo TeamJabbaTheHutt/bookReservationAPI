@@ -10,6 +10,7 @@ import org.example.bookreservationapi.workingDay.enity.WorkingDay;
 import org.example.bookreservationapi.workingDay.repository.WorkingDayRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
+@Profile("prod")
 public class InitApp {
 
     @Bean

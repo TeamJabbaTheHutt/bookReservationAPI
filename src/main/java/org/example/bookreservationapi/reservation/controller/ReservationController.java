@@ -3,12 +3,14 @@ package org.example.bookreservationapi.reservation.controller;
 import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.reservation.entity.Reservation;
 import org.example.bookreservationapi.reservation.service.ReservationService;
+import org.example.bookreservationapi.treament.entity.Treatment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -53,4 +55,54 @@ public class ReservationController {
         return reservationService.getAllReservationByEmployeeId(employeeId);
     }
 
+    @PostMapping
+    public ReservationResponse createNewReservation(
+            @RequestBody ReservationRequest request) {
+
+        Reservation saved =
+                reservationService.createNewReservation(request.toEntity());
+
+        return ReservationResponse.from(saved);
+    }
+
+
+
+    public record ReservationResponse(
+            Long reservationId,
+            Long employeeId,
+            Treatment treatment,
+            LocalDateTime startDateTime,
+            String customerName,
+            String customerEmail
+    ) {
+
+        public static ReservationResponse from(Reservation reservation) {
+            return new ReservationResponse(
+                    reservation.getReservationId(),
+                    reservation.getEmployeeId(),
+                    reservation.getTreatment(),
+                    reservation.getStartDateTime(),
+                    reservation.getCustomerName(),
+                    reservation.getCustomerEmail()
+            );
+        }
+    }
+
+    public record ReservationRequest(
+            Long employeeId,
+            Treatment treatment,
+            LocalDateTime startDateTime,
+            String customerName,
+            String customerEmail
+    ) {
+        public Reservation toEntity() {
+            return new Reservation(
+                    this.employeeId,
+                    this.treatment,
+                    this.startDateTime,
+                    this.customerName,
+                    this.customerEmail
+            );
+        }
+    }
 }

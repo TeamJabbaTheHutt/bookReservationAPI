@@ -45,6 +45,9 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public Reservation createNewReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
 
 
 

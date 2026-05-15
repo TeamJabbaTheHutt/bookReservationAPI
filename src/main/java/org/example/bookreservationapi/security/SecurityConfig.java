@@ -11,6 +11,7 @@ import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.employee.service.EmployeeService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,6 +29,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
+@Profile("prod")
 @EnableMethodSecurity
 public class SecurityConfig {
 
