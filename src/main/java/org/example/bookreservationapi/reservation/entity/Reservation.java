@@ -27,13 +27,20 @@ public class Reservation {
     private String customerName;
     private String customerEmail;
 
-    public Reservation(Long reservationId, Long employeeId, LocalDateTime startDateTime, String customerName, String customerEmail) {
-        this.reservationId = reservationId;
+    public Reservation(Long employeeId, Treatment treatment, LocalDateTime startDateTime, String customerName, String customerEmail) {
         this.employeeId = employeeId;
-
+        this.treatment = treatment;
         this.startDateTime = startDateTime;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
+    }
+
+    public Treatment getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(Treatment treatment) {
+        this.treatment = treatment;
     }
 
     public Reservation() {

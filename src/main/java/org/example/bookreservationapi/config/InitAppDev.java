@@ -18,23 +18,21 @@ import java.util.List;
 
 @Component
 @Profile("prod")
-public class InitApp {
+public class InitAppDev {
 
     @Bean
     @Transactional
     CommandLineRunner initDatabase(
             TreatmentRepository treatmentRepository,
             EmployeeRepository employeeRepository,
-            WorkingDayRepository workingDayRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+            WorkingDayRepository workingDayRepository) {
         return args -> {
 
             EmployeeEntity employee1 = new EmployeeEntity();
             employee1.setEmployeeName("mette");
             employee1.setUsername("employee1");
             employee1.setRole("ADMIN");
-            employee1.setPassword(passwordEncoder.encode("pw"));
+            employee1.setPassword("pw");
 
             employeeRepository.save(employee1);
 
@@ -86,3 +84,4 @@ public class InitApp {
         };
     }
 }
+

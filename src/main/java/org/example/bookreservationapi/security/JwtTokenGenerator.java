@@ -1,5 +1,6 @@
 package org.example.bookreservationapi.security;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
@@ -16,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@Profile("prod")
 public class JwtTokenGenerator {
     private final JwtEncoder jwtEncoder;
 
