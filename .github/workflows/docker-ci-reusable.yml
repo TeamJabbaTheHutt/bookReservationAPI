@@ -19,6 +19,6 @@ jobs:
           
           sleep 40
             
-          curl -f http://localhost:8080/actuator/health || exit 1
+          curl -f http://localhost:80/actuator/health || exit 1
           
           docker compose down
