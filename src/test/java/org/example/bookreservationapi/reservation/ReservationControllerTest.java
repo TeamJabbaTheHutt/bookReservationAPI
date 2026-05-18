@@ -1,50 +1,56 @@
 package org.example.bookreservationapi.reservation;
 
+
+import org.example.bookreservationapi.employee.entity.EmployeeEntity;
+import org.example.bookreservationapi.reservation.controller.ReservationController;
 import org.example.bookreservationapi.reservation.entity.Reservation;
 import org.example.bookreservationapi.reservation.service.ReservationService;
+import org.example.bookreservationapi.security.SecurityConfig;
+
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@SpringBootTest
-@ActiveProfiles("test")
-@Sql(scripts = "/h2init.sql", executionPhase = BEFORE_TEST_METHOD)
-@WebMvcTest(ReservationControllerTest.class)
-public class ReservationControllerTest {
-
-    @Autowired
-    private ReservationService reservationService;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+@WebMvcTest(ReservationController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class ReservationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-   @Test
-    void getListOfReservationByEmployeeIdShouldReturnList() throws Exception {
-       List<Reservation> reservations = reservationService.getAllReservationByEmployeeId(1L);
-       assertThat(reservations.size()).isEqualTo(4);
+    @MockitoBean
+    private ReservationService reservationService;
 
-       mockMvc.perform(get("/api/reservations/"+1L))
-               .andExpect(status().isOk())
-               .andExpect(model().attribute("reservationsByEmployee", reservations));
+    @Test
+    void getAllReservations_shouldReturnList() throws Exception {
 
-       verify(reservationService).getAllReservationByEmployeeId(1L);
-   }
+        Reservation reservation = new Reservation();
+        reservation.setEmployeeId(1L);
 
+        List<Reservation> reservations = List.of(reservation);
+
+        when(reservationService.findAllReservationsEvenIfEmpty())
+                .thenReturn(reservations);
+
+        mockMvc.perform(get("/api/reservations/all-reservations"))
+                .andExpect(status().isOk());
+
+        verify(reservationService).findAllReservationsEvenIfEmpty();
+    }
 }

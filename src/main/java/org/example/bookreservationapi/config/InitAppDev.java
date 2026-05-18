@@ -2,6 +2,8 @@ package org.example.bookreservationapi.config;
 
 import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.employee.repository.EmployeeRepository;
+import org.example.bookreservationapi.reservation.entity.Reservation;
+import org.example.bookreservationapi.reservation.repository.ReservationRepository;
 import org.example.bookreservationapi.treament.entity.Treatment;
 import org.example.bookreservationapi.treament.repository.TreatmentRepository;
 import org.example.bookreservationapi.workingDay.enity.WorkingDay;
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-@Profile("prod")
+@Profile("dev")
 public class InitAppDev {
 
     @Bean
@@ -25,7 +27,8 @@ public class InitAppDev {
     CommandLineRunner initDatabase(
             TreatmentRepository treatmentRepository,
             EmployeeRepository employeeRepository,
-            WorkingDayRepository workingDayRepository) {
+            WorkingDayRepository workingDayRepository,
+            ReservationRepository reservationRepository) {
         return args -> {
 
             EmployeeEntity employee1 = new EmployeeEntity();
@@ -80,7 +83,14 @@ public class InitAppDev {
 
             workingDayRepository.saveAll(List.of(workingDay1, workingDay2, workingDay3, workingDay4, workingDay5, workingDay6));
 
+            Reservation reservation = new Reservation();
+            reservation.setEmployeeId(1L);
+            reservation.setTreatment(treatment1);
+            reservation.setStartDateTime(LocalDateTime.of(2026, 5, 16, 9, 0));
+            reservation.setCustomerName("testCustomer");
+            reservation.setCustomerEmail("testEmail@email.com");
 
+            reservationRepository.save(reservation);
         };
     }
 }

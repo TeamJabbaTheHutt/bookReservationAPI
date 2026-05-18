@@ -24,7 +24,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/myReservations")
     public List<Reservation> getMyReservations(Authentication authentication) {
         String username = authentication.getName();
          EmployeeEntity employee = reservationService.findByUsername(username)
