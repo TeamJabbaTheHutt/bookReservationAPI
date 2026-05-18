@@ -18,7 +18,7 @@ function renderNav() {
     const nav = document.getElementById("nav");
     nav.innerHTML = `
                 <button id="logIn">Log in</button>
-
+    
     `;
 
 }
