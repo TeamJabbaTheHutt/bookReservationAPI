@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,78 +29,64 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 
+
 @Configuration
-@Profile("prod")
 @EnableMethodSecurity
 public class SecurityConfig {
-
     @Bean
     SecurityContextRepository securityContextRepository() {
         return new HttpSessionSecurityContextRepository();
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http
+    ) {
         http
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
-                        .spa()
-                )
-                .headers(headers ->
-                        headers.frameOptions(frameOptions -> frameOptions.sameOrigin())
-                )
+                .csrf(CsrfConfigurer::spa)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/h2-console/**",
-                                "/",
-                                "/index.html",
-                                "/login",
-                                "/static/**"
-                        ).permitAll()
+                        .requestMatchers("/.well-known/jwks.json").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
+                // Use the built-in UsernamePasswordAuthenticationFilter but make it SPA-friendly
                 .formLogin(form -> form
                         .loginProcessingUrl("/api/login")
-                        .successHandler((req, res, auth) ->
-                                res.setStatus(HttpServletResponse.SC_NO_CONTENT)
-                        )
-                        .failureHandler((req, res, ex) ->
-                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                        )
+                        .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204
+                        .failureHandler((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)) // 401
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/logout")
-                        .logoutSuccessHandler((req, res, auth) ->
-                                res.setStatus(HttpServletResponse.SC_NO_CONTENT)
-                        )
+                        .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_NO_CONTENT)) // 204
                 )
+                // Return 401 instead of redirecting to /login
                 .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint((req, res, ex) ->
-                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                        )
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 );
-
+        ;
         return http.build();
     }
-    @Bean
-    public UserDetailsService userDetailsService(EmployeeService employeeService) {
-        return username -> {
-            EmployeeEntity employee = employeeService.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            return User.builder()
-                    .username(employee.getUsername())
-                    .password(employee.getPassword())
-                    .roles("USER")
-                    .build();
-        };
+    @Bean
+    UserDetailsService userDetailsManager(PasswordEncoder passwordEncoder) {
+        var u1 = User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("pw"))
+                .roles("USER")
+                .build();
+        var u2 = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("pw"))
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(u1, u2);
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     JwtEncoder jwtEncoder(RsaKeyProperties rsaKeyProperties) {
         JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey())

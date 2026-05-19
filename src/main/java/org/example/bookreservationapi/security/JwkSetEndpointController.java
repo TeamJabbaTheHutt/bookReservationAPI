@@ -14,7 +14,6 @@ import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.JWSAlgorithm;
 
 @RestController
-@Profile("prod")
 class JwkSetEndpointController {
     private final RsaKeyProperties rsaKeyProperties;
 

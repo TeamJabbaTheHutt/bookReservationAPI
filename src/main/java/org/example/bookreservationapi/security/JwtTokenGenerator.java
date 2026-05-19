@@ -17,7 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-@Profile("prod")
 public class JwtTokenGenerator {
     private final JwtEncoder jwtEncoder;
 
