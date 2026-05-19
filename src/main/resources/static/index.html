@@ -23,6 +23,58 @@
 
     </div>
 
+    <div id="public-area">
+        <h1>Velkommen</h1>
+        <button id="show-login-btn">Log ind som behandler</button>
+        <button id="show-booking-btn">Book en behandling</button>
+    </div>
+
+    <section id="booking-section" class="booking hidden">
+        <h2>Book en behandling</h2>
+
+        <!-- Step 1: Vælg behandler -->
+        <div id="step-employee" class="booking-step">
+            <h3>Trin 1: Vælg behandler</h3>
+            <div id="employee-list"></div>
+        </div>
+
+        <!-- Step 2: Vælg behandling -->
+        <div id="step-treatment" class="booking-step hidden">
+            <h3>Trin 2: Vælg behandling</h3>
+            <p>Behandler: <span id="selected-employee-name"></span></p>
+            <div id="treatment-list"></div>
+            <button class="back-btn" data-target="step-employee">Tilbage</button>
+        </div>
+
+        <!-- Step 3: Vælg dato og tid -->
+        <div id="step-datetime" class="booking-step hidden">
+            <h3>Trin 3: Vælg dato og tidspunkt</h3>
+            <p>Behandling: <span id="selected-treatment-title"></span></p>
+            <label for="booking-date">Dato:</label>
+            <input type="date" id="booking-date">
+            <div id="slot-list"></div>
+            <button class="back-btn" data-target="step-treatment">Tilbage</button>
+        </div>
+
+        <!-- Step 4: Bekræft -->
+        <div id="step-confirm" class="booking-step hidden">
+            <h3>Trin 4: Dine oplysninger</h3>
+            <div id="booking-summary"></div>
+            <label for="customer-name">Navn:</label>
+            <input type="text" id="customer-name" required>
+            <label for="customer-email">Email:</label>
+            <input type="email" id="customer-email" required>
+            <button id="confirm-booking-btn">Bekræft booking</button>
+            <button class="back-btn" data-target="step-datetime">Tilbage</button>
+        </div>
+
+        <!-- Step 5: Succes -->
+        <div id="step-success" class="booking-step hidden">
+            <h3>✅ Booking bekræftet!</h3>
+            <div id="confirmation-details"></div>
+            <button id="new-booking-btn">Lav en ny booking</button>
+        </div>
+    </section>
 
 </body>
 

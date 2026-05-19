@@ -4,6 +4,8 @@ import org.example.bookreservationapi.employee.entity.EmployeeEntity;
 import org.example.bookreservationapi.employee.service.EmployeeService;
 import org.example.bookreservationapi.reservation.entity.Reservation;
 import org.example.bookreservationapi.reservation.repository.ReservationRepository;
+import org.example.bookreservationapi.treament.entity.Treatment;
+import org.example.bookreservationapi.treament.service.TreatmentService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class ReservationService {
     private ReservationRepository reservationRepository;
     private EmployeeService employeeService;
+    private TreatmentService treatmentService;
 
-    public ReservationService(ReservationRepository reservationRepository, EmployeeService employeeService) {
+    public ReservationService(ReservationRepository reservationRepository, EmployeeService employeeService, TreatmentService treatmentService) {
         this.reservationRepository = reservationRepository;
         this.employeeService = employeeService;
+        this.treatmentService = treatmentService;
     }
 
     public List<Reservation> getReservationsForEmployee(Long employeeId, LocalDate startDate, LocalDate endDate) {
@@ -46,6 +50,16 @@ public class ReservationService {
     }
 
     public Reservation createNewReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    public Reservation createNewReservation(Long employeeId, Long treatmentId,
+                                            LocalDateTime startDateTime,
+                                            String customerName, String customerEmail) {
+        Treatment treatment = treatmentService.getTreatmentById(treatmentId)
+                .orElseThrow(() -> new RuntimeException("Treatment not found"));
+
+        Reservation reservation = new Reservation(employeeId, treatment, startDateTime, customerName, customerEmail);
         return reservationRepository.save(reservation);
     }
 
