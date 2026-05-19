@@ -50,6 +50,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 class TreatmentControllerTest {
 
     @Autowired
@@ -63,9 +64,9 @@ class TreatmentControllerTest {
 
         List<Treatment> treatments = response.getBody();
 
-        assertThat(treatments).hasSize(4);
-        assertThat(treatments.get(0).getTitle()).isEqualTo("treatment1");
-        assertThat(treatments.get(1).getTitle()).isEqualTo("treatment2");
+        assertThat(treatments).hasSize(5);
+        assertThat(treatments.get(0).getTitle()).isEqualTo("Klipning");
+        assertThat(treatments.get(1).getTitle()).isEqualTo("Farvning");
     }
 
     @Test
@@ -76,7 +77,7 @@ class TreatmentControllerTest {
 
         Treatment treatment = response.getBody();
 
-        assertThat(treatment.getTitle()).isEqualTo("treatment1");
+        assertThat(treatment.getTitle()).isEqualTo("Klipning");
     }
 
     @Test
