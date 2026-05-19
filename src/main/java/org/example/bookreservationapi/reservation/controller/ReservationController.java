@@ -56,12 +56,14 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse createNewReservation(
-            @RequestBody ReservationRequest request) {
-
-        Reservation saved =
-                reservationService.createNewReservation(request.toEntity());
-
+    public ReservationResponse createNewReservation(@RequestBody ReservationRequest request) {
+        Reservation saved = reservationService.createNewReservation(
+                request.employeeId(),
+                request.treatmentId(),
+                request.startDateTime(),
+                request.customerName(),
+                request.customerEmail()
+        );
         return ReservationResponse.from(saved);
     }
 
@@ -90,19 +92,12 @@ public class ReservationController {
 
     public record ReservationRequest(
             Long employeeId,
-            Treatment treatment,
+            Long treatmentId,
             LocalDateTime startDateTime,
             String customerName,
             String customerEmail
     ) {
-        public Reservation toEntity() {
-            return new Reservation(
-                    this.employeeId,
-                    this.treatment,
-                    this.startDateTime,
-                    this.customerName,
-                    this.customerEmail
-            );
-        }
+
+
     }
 }

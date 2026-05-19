@@ -218,4 +218,34 @@ export async function getReservationByEmployeeId(id) {
     return await res.json();
 }
 
+// Public booking-related functions
+
+export async function fetchAvailableSlots(employeeId, treatmentId, date) {
+    const params = new URLSearchParams({ employeeId, treatmentId, date });
+    const res = await fetch(`${BASE_URL}/availability?${params.toString()}`);
+    if (!res.ok) {
+        console.error("Failed to fetch availability:", res.status);
+        return [];
+    }
+    return await res.json();
+}
+
+export async function fetchTreatmentsForEmployee(employeeId) {
+    const res = await fetch(`${BASE_URL}/employees/${employeeId}/treatments`);
+    return await res.json();
+}
+
+export async function createReservation(reservation) {
+    const res = await fetch(`${BASE_URL}/reservations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reservation)
+    });
+
+    if (!res.ok) {
+        throw new Error("Booking failed: " + res.status);
+    }
+    return await res.json();
+}
+
 

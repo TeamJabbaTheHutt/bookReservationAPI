@@ -61,8 +61,5 @@ public class EmployeeController {
         return employeeService.getTreatmentsForEmployee(id);
     }
 
-    private record employeeResponse(Long id, String username, List<String> roles) {}
-
-    private record employeeRequest(String username, List<String> roles, String password) {}
 
 }

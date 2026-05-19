@@ -102,3 +102,73 @@
 .employee-time {
     font-size: 12px;
 }
+
+.booking {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.booking-step {
+    margin-top: 20px;
+}
+
+.booking-step h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.list-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.list-item:hover {
+    background: #e8efff;
+    border-color: #3752ff;
+}
+
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.slot-btn {
+    padding: 10px;
+    background: white;
+    border: 1px solid #3752ff;
+    color: #3752ff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.slot-btn:hover {
+    background: #3752ff;
+    color: white;
+}
+
+.back-btn {
+    margin-top: 15px;
+    background: #999;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#booking-summary {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
