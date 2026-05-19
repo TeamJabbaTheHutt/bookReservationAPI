@@ -3,6 +3,7 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn dependency:resolve
 COPY src ./src
+COPY keys ./keys
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:25-jre-alpine
